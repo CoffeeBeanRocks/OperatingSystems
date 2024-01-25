@@ -1,0 +1,36 @@
+commit 88cf205cc32d0d4c95bb579ccf901470a780008c
+Author: Pokemod97 <cadenkline9@gmail.com>
+Date:   Wed Feb 1 20:12:49 2023 -0500
+
+    create wait on child
+    create wait on child
+
+diff --git a/include/prototypes.h b/include/prototypes.h
+index 12c3cb3..d34cdb1 100644
+--- a/include/prototypes.h
++++ b/include/prototypes.h
+@@ -598,6 +598,8 @@ extern	status	udp_release(uid32);
+ extern	void	udp_ntoh(struct netpacket *);
+ extern	void	udp_hton(struct netpacket *);
+ 
++/*in file waitonchild.c*/
++extern int32 wait_on_child(pid32); 
+ 
+ /* in file unsleep.c */
+ extern	syscall	unsleep(pid32);
+diff --git a/system/waitonchild.c b/system/waitonchild.c
+new file mode 100644
+index 0000000..2e3ac5a
+--- /dev/null
++++ b/system/waitonchild.c
+@@ -0,0 +1,10 @@
++#include <xinu.h>
++
++int32 wait_on_child(pid32 child) {
++  int32 msg = recvclr();
++  resume(child);
++  while (msg != child) {
++    msg = receive();
++  }
++  return OK;
++}
